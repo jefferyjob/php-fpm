@@ -1,0 +1,45 @@
+version: "3"
+services:
+  php-fpm:
+    build:
+      context: ./service
+      args:
+        CONTAINER_PACKAGE_URL: "mirrors.tencent.com"
+        TZ: "Asia/Shanghai"
+    container_name: php-fpm
+#    ports:
+#      - "80:80"
+#      - "443:443"
+    extra_hosts:
+      - "www.site1.com:172.17.0.1"
+    volumes:
+      - ./:/www/:rw
+      # nginx 配置
+      - ./config/nginx/ssl:/ssl:rw
+      - ./config/nginx/conf.d:/etc/nginx/conf.d/:rw
+      - ./config/nginx/nginx.conf:/etc/nginx/nginx.conf:ro
+      - ./config/nginx/fastcgi-php.conf:/etc/nginx/fastcgi-php.conf:ro
+      - ./config/nginx/fastcgi_params:/etc/nginx/fastcgi_params:ro
+      - ./logs/nginx:/var/log/nginx/:rw
+      # php 配置
+      - ./config/php8/php.ini:/usr/local/php/etc/php.ini:ro
+      - ./config/php8/php-fpm.conf:/usr/local/php/etc/php-fpm.conf:rw
+      - ./logs/php:/var/log/php
+      - ./data/composer:/tmp/composer
+      # supervisor 配置
+      - ./logs/supervisor:/var/log/supervisor/:rw
+      - ./config/supervisor/conf.d/:/etc/supervisor/conf.d/:rw
+      - ./config/supervisor/supervisord.conf:/etc/supervisor/supervisord.conf:ro
+    restart: always
+    environment:
+      APP_ENV: "sample"
+    cap_add:
+      - SYS_PTRACE
+    networks:
+      - default
+
+networks:
+  default:
+    driver: bridge
+    ipam:
+      driver: default

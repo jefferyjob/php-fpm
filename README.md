@@ -7,3 +7,7 @@ PHP Docker 服务
     && pecl install opcache-7.0.5 \
     && pecl install apcu-5.1.22 \
 ```
+
+## 参考资料
+- https://github.com/mlocati/docker-php-extension-installer
+- https://github.com/laradock/laradock

@@ -7,9 +7,10 @@ services:
         CONTAINER_PACKAGE_URL: "mirrors.tencent.com"
         TZ: "Asia/Shanghai"
     container_name: php-fpm
-#    ports:
-#      - "80:80"
-#      - "443:443"
+    ports:
+      - "80:80"
+      - "443:443"
+      - "9001:9001"
     extra_hosts:
       - "www.site1.com:172.17.0.1"
     volumes:
@@ -32,7 +33,7 @@ services:
       - ./config/supervisor/supervisord.conf:/etc/supervisor/supervisord.conf:ro
     restart: always
     environment:
-      APP_ENV: "sample"
+      APP_ENV: "test"
     cap_add:
       - SYS_PTRACE
     networks:
